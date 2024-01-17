@@ -1,0 +1,154 @@
+<project name="filrouge" default="run" basedir=".">
+  <property name="app.name" value="filrouge" />
+  <property name="app.fullname" value="${app.name}" />
+  <property name="bin.home" value="${basedir}/bin" />
+  <property name="bin.test.home" value="${basedir}/binTest" />
+  <property name="dist.home" value="${basedir}/dist" />
+  <property name="docs.home" value="${basedir}/docs" />
+  <property name="src.home" value="${basedir}/src" />
+  <property name="src.test.home" value="${basedir}/test" />
+  <property name="lib.home" value="${basedir}/lib" />
+  <property name="javac.encoding" value="UTF-8" />
+  <property name="javac.version" value="11.0.16" />
+  <!--
+ ==================== Compile options =========================== 
+-->
+  <property name="compile.debug" value="true" />
+  <property name="compile.deprecation" value="false" />
+  <property name="compile.optimize" value="true" />
+  <!--
+ ==================== Compilation Classpath =========================== 
+-->
+  <path id="compile.classpath">
+    <fileset dir="${lib.home}">
+      <include name="**/*.jar" />
+    </fileset>
+    <pathelement path="${bin.home}" />
+  </path>
+  <!--
+ ==================== All Target ====================================== 
+-->
+  <target name="all" depends="clean,compile" description="Clean bin and dist directories, then compile" />
+  <!--
+ ==================== Clean Target ==================================== 
+-->
+  <target name="clean" description="Delete old bin and dist directories">
+    <delete dir="${bin.home}" />
+    <!-- <delete dir="${bin.test.home}" /> -->
+    <delete dir="${dist.home}" />
+  </target>
+  <!--
+ ==================== Prepare Target ================================== 
+-->
+  <target name="prepare">
+    <mkdir dir="${bin.home}" />
+    <!-- <mkdir dir="${bin.test.home}" /> -->
+    <mkdir dir="${dist.home}" />
+  </target>
+  <!--
+ ==================== Compile Target ================================== 
+-->
+  <target name="compile" depends="prepare" description="Compile Java sources">
+    <javac srcdir="${src.home}" destdir="${bin.home}" debug="${compile.debug}" deprecation="${compile.deprecation}" optimize="${compile.optimize}" encoding="${javac.encoding}">
+      <classpath refid="compile.classpath" />
+    </javac>
+    <!-- <javac srcdir="${src.test.home}" destdir="${bin.test.home}">
+      <classpath>
+        <pathelement location="${bin.home}" />
+        <path refid="compile.classpath" />
+      </classpath>
+    </javac> -->
+    <!-- Copy application resources -->
+    <copy todir="${bin.home}">
+      <fileset dir="${src.home}" excludes="**/*.java" />
+    </copy>
+  </target>
+  <!--
+ ==================== Dist Target ===================================== 
+-->
+  <target name="dist" depends="clean,compile,javadoc" description="Create binary distribution">
+    <copy todir="${dist.home}/lib">
+      <fileset dir="${lib.home}" />
+    </copy>
+    <!-- Create application JAR file -->
+    <jar jarfile="${dist.home}/${app.fullname}.jar" basedir="${bin.home}">
+      <manifest>
+        <attribute name="Main-Class" value="main.Main" />
+
+        <attribute name="Class-Path" value="lib/tests.jar" />
+
+      </manifest>
+    </jar>
+    <copy todir="${basedir}/../renduTP">
+      <fileset dir="..">
+        <include name="${src.home}/**"/>
+      </fileset>
+    </copy>
+
+  </target>
+  <!--
+ Attention : copie ad-hoc pour satisfaire immédiatement une mise à jour de dépendance, car le projet "blackjack" a besoin de cette librairie 
+-->
+  <!-- <copy file="${dist.home}/${app.fullname}.jar" todir="${basedir}/../blackjack/lib" />
+  </target> -->
+  <!--
+ ==================== Javadoc Target ================================== 
+-->
+  <target name="javadoc" depends="compile" description="Create Javadoc API documentation">
+    <mkdir dir="${dist.home}/docs/api" />
+    <javadoc sourcepath="${src.home}" destdir="${dist.home}/docs/api" packagenames="*">
+      <classpath>
+        <fileset dir="${lib.home}">
+          <include name="**/*.jar" />
+        </fileset>
+      </classpath>
+    </javadoc>
+  </target>
+  <!--
+ ==================== Run Target ================================== 
+-->
+  <target name="run" depends="dist">
+    <java jar="${dist.home}/${app.fullname}.jar" fork="true"/>
+  </target>
+
+  <!-- ==================== Run Planner ==================================   -->
+  <target name = "planner" depends="compile">
+    <description>Run Planner Tests </description>
+    <java classname="main.MainPlanner" fork="true">
+      <classpath refid="compile.classpath"/>
+    </java>
+  </target>
+
+  <!-- ==================== Run CSP ==================================   -->
+  <target name = "csp" depends="compile">
+    <java classname="main.MainCP" fork="true">
+      <classpath refid="compile.classpath" />
+    </java>
+  </target>
+
+  <!-- ==================== Run Dataminig ==================================   -->
+  <target name = "datamining" depends="compile">
+    <java classname="main.MainDatamining" fork="true">
+      <classpath refid="compile.classpath" />
+    </java>
+  </target>
+
+   <!-- ==================== Run Constraint ==================================   -->
+  <target name = "main" depends="compile">
+    <java classname="main.MainConstraints" fork="true">
+      <classpath refid="compile.classpath" />
+    </java>
+  </target>
+
+  <!-- ==================== Run all ==================================   -->
+  <target name = "run all" depends="main,planner,csp,datamining"/>
+
+  <!--
+ ==================== Run English ================================== 
+-->
+  <target name="run-english" depends="dist">
+    <java jar="${dist.home}/${app.fullname}.jar" fork="true">
+      <jvmarg value="-Duser.language=en" />
+    </java>
+  </target>
+</project>

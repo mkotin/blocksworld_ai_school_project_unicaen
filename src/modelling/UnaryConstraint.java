@@ -29,4 +29,11 @@ public class UnaryConstraint implements Constraint {
 
         return this.S.contains(inst.get(this.v));
     }
+
+    @Override
+    public String toString() {
+        return  v.getName() + " in " + S ;
+    }
+
+    
 }

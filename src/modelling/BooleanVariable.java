@@ -13,5 +13,12 @@ public class BooleanVariable extends Variable {
         super.setDomain(domain);;
     }
 
+    @Override
+    public String toString() {
+        return name;
+    }
+
+    
+
     
 }

@@ -37,5 +37,12 @@ public class Implication implements Constraint {
         
         return (!this.S1.contains(inst.get(this.v1)) || this.S2.contains(inst.get(this.v2)));
     }
+
+    @Override
+    public String toString() {
+        return  v1.getName() + "==" + S1 + " ===> " + v2.getName() + "==" + S2 ;
+    }
+
+    
     
 }

@@ -51,8 +51,9 @@ public class BFSPlanner implements Planner {
         if(this.goal.isSatisfiedBy(this.initialState)) {
             return new ArrayList<Action>();
         }
-
+        
         while(!open.isEmpty()) {
+            //System.out.println("here we go");
             Map<Variable, Object> instantiation = open.poll();
             closed.add(instantiation);
 

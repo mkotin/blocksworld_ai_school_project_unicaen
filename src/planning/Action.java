@@ -11,4 +11,5 @@ public interface Action {
     public Map<Variable, Object> successor(Map<Variable, Object> state);
 
     public int getCost();
+
 }

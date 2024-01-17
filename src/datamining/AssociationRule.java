@@ -35,6 +35,14 @@ public class AssociationRule {
         return confidence;
     }
 
+    @Override
+    public String toString() {
+        return "AssociationRule [premise=" + premise.toString() + ", conclusion=" + conclusion.toString() + ", frequency=" + frequency
+                + ", confidence=" + confidence + "]";
+    }
+
+    
+
     
 
 

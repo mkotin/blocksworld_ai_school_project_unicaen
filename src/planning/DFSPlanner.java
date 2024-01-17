@@ -43,7 +43,7 @@ public class DFSPlanner implements Planner {
                         closed.add(next);
                         sonde++;
                         List<Action> subplan = plan_aux(next, plan, closed);
-                        if(subplan == null || !subplan.isEmpty()) {
+                        if(subplan != null) {
                             return subplan;
                         } else {
                             // Calculate index of last element

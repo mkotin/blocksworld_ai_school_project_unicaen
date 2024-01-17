@@ -22,6 +22,13 @@ public class Itemset {
         return frequency;
     }
 
+    @Override
+    public String toString() {
+        return "[" + items.toString() + ", frequency=" + frequency + "]";
+    }
+
+    
+
     
 
     
